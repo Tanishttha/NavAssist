@@ -65,9 +65,6 @@ def clear_chat_history():
     return {
         "message": "Chat history cleared successfully"
     }
-# ============================
-# AI COMMANDS & QUICK ACTIONS
-# ============================
 
 QUICK_COMMANDS = {
     "nearest hospital": "Searching nearest hospital...",
@@ -101,10 +98,6 @@ def execute_command(data: ChatMessage):
         "success": False,
         "response": "Unknown command"
     }
-
-# ============================
-# FAQ ASSISTANT
-# ============================
 
 FAQ_DATABASE = {
     "how to navigate":
@@ -145,10 +138,6 @@ def faq_response(data: ChatMessage):
         "answer": "No matching FAQ found."
     }
 
-# ============================
-# CHAT ANALYTICS
-# ============================
-
 @router.get("/chat/stats")
 def get_chat_stats():
 
@@ -160,9 +149,6 @@ def get_chat_stats():
         "active": True
     }
 
-# ============================
-# SAVED CONVERSATIONS
-# ============================
 
 saved_sessions = []
 
@@ -186,9 +172,6 @@ def get_saved_sessions():
         "sessions": saved_sessions
     }
 
-# ============================
-# EMERGENCY ASSISTANT
-# ============================
 
 EMERGENCY_CONTACTS = [
     {
@@ -221,10 +204,6 @@ def trigger_sos():
         "time": datetime.now().isoformat()
     }
 
-# ============================
-# VOICE CHAT PLACEHOLDER
-# ============================
-
 @router.post("/chat/voice")
 def process_voice(data: ChatMessage):
 
@@ -234,10 +213,6 @@ def process_voice(data: ChatMessage):
             data.message
         )
     }
-
-# ============================
-# ROUTE QUESTIONS
-# ============================
 
 ROUTE_QUESTIONS = {
     "distance":
