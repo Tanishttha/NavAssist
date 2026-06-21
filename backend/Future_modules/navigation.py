@@ -8,24 +8,15 @@ import re
 
 print("🔥 THIS FILE IS RUNNING")
 router = APIRouter()
-
-# 🧠 In-memory step tracker (for demo)
 current_step_index = 0
 
-# 🧹 Clean HTML instructions from Google Maps
 def clean_html(raw_html):
-    # Remove all HTML tags properly
     clean_text = re.sub(r'<[^>]+>', '', raw_html)
-    # Remove extra spaces/newlines
     clean_text = re.sub(r'\s+', ' ', clean_text).strip()
     return clean_text
 
 
 def get_google_maps_route(destination: str, origin: str):
-    """
-    🔥 Google Maps API integration (placeholder)
-    Replace API_KEY with your key
-    """
     try:
         API_KEY = "AIzaSyCv6dwB1BL3uF2uliD-rp10-xSu8bhmesI"
 
@@ -42,9 +33,8 @@ def get_google_maps_route(destination: str, origin: str):
         response = requests.get("https://maps.googleapis.com/maps/api/directions/json", params=params)
         data = response.json()
 
-        print("🔥 GOOGLE API RESPONSE:", data)
+        print("GOOGLE API RESPONSE:", data)
 
-        # ⚠️ Fallback if API fails
         if data.get("status") != "OK":
             logging.error(f"Google API Error: {data}")
             raise Exception(f"Google API failed: {data.get('status')}")
@@ -57,7 +47,6 @@ def get_google_maps_route(destination: str, origin: str):
             instruction = clean_html(raw_instruction)
             distance = step["distance"]["text"]
 
-            # 🧠 Detect direction type
             direction = "forward"
             text_lower = instruction.lower()
 
@@ -67,9 +56,9 @@ def get_google_maps_route(destination: str, origin: str):
                 direction = "right"
 
             formatted_steps.append({
-                "text": instruction,  # cleaned text (no HTML)
-                "type": step.get("maneuver", direction),  # use Google maneuver if available
-                "distance_value": step["distance"]["value"],  # meters
+                "text": instruction,  
+                "type": step.get("maneuver", direction), 
+                "distance_value": step["distance"]["value"],  
                 "start_location": step.get("start_location"),
                 "end_location": step.get("end_location")
             })
@@ -89,17 +78,11 @@ def get_google_maps_route(destination: str, origin: str):
 
 @router.post("/get-route")
 def get_route(data: RouteRequest):
-    """
-    🧭 Navigation API with:
-    ✔ Google Maps integration
-    ✔ Turn-by-turn step tracking
-    ✔ Voice auto instructions
-    """
+   
 
     global current_step_index
 
     try:
-        # 🛡️ Validation
         if not data:
             raise HTTPException(status_code=400, detail="Invalid request")
 
@@ -113,7 +96,6 @@ def get_route(data: RouteRequest):
 
         logging.info(f"Fetching route for: {destination}")
 
-        # 🔥 Get route (Google Maps or fallback)
         route = get_google_maps_route(destination, origin)
 
         steps = route.get("steps", [])
@@ -121,26 +103,18 @@ def get_route(data: RouteRequest):
         if not steps:
             raise HTTPException(status_code=500, detail="No route steps found")
 
-        # 🧭 Turn-by-turn logic
         if current_step_index >= len(steps):
             current_step_index = 0  # reset
 
         current_step = steps[current_step_index]
-
-        # 📍 FIXED: Do NOT auto-skip steps randomly
-        # Step progression should be controlled by frontend (GPS tracking)
         step_distance = current_step.get("distance_value", 0)
-
-        # Only move step if explicitly triggered (keep stable)
         if step_distance == 0 and current_step_index < len(steps) - 1:
             current_step_index += 1
             current_step = steps[current_step_index]
 
-        # 🔊 English + Hindi voice
         generate_voice_output(f"{current_step['text']}", "navigation")
         generate_voice_output("Kripya diye gaye direction follow karein", "navigation")
 
-        # 🧠 Decision Engine
         navigation_result = process_navigation(route)
 
         return {
