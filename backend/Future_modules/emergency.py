@@ -6,10 +6,6 @@ import uuid
 
 router = APIRouter()
 
-# =====================
-# MODELS
-# =====================
-
 class SOSRequest(BaseModel):
     user_id: str
     latitude: float
@@ -21,16 +17,8 @@ class EmergencyContact(BaseModel):
     phone: str
     relation: str
 
-# =====================
-# STORAGE
-# =====================
-
 emergency_contacts = []
 sos_history = []
-
-# =====================
-# DEFAULT NUMBERS
-# =====================
 
 INDIA_EMERGENCY = {
     "police": "100",
@@ -39,10 +27,6 @@ INDIA_EMERGENCY = {
     "women_helpline": "1091",
     "disaster": "1078"
 }
-
-# =====================
-# CONTACT MANAGEMENT
-# =====================
 
 @router.post("/emergency/contact")
 def add_contact(contact: EmergencyContact):
@@ -75,10 +59,6 @@ def delete_contact(phone: str):
         "message": "Contact removed"
     }
 
-# =====================
-# SOS SYSTEM
-# =====================
-
 @router.post("/emergency/sos")
 def trigger_sos(data: SOSRequest):
 
@@ -110,10 +90,6 @@ def get_sos_history():
         "records": sos_history
     }
 
-# =====================
-# LOCATION SHARING
-# =====================
-
 @router.post("/emergency/share-location")
 def share_location(
     latitude: float,
@@ -130,10 +106,6 @@ def share_location(
         "location": location_link
     }
 
-# =====================
-# FALL DETECTION
-# =====================
-
 @router.post("/emergency/fall-detected")
 def fall_detected():
 
@@ -142,10 +114,6 @@ def fall_detected():
         "message":
         "Potential fall detected. SOS recommended."
     }
-
-# =====================
-# PANIC MODE
-# =====================
 
 @router.post("/emergency/panic")
 def panic_mode():
@@ -160,10 +128,6 @@ def panic_mode():
         ]
     }
 
-# =====================
-# SAFE CHECK-IN
-# =====================
-
 @router.post("/emergency/checkin")
 def safe_checkin(user_id: str):
 
@@ -173,18 +137,10 @@ def safe_checkin(user_id: str):
         "timestamp": datetime.now().isoformat()
     }
 
-# =====================
-# EMERGENCY SERVICES
-# =====================
-
 @router.get("/emergency/services")
 def emergency_services():
 
     return INDIA_EMERGENCY
-
-# =====================
-# NEAREST HELP
-# =====================
 
 @router.get("/emergency/nearby-help")
 def nearby_help():
@@ -198,10 +154,6 @@ def nearby_help():
             "Central Police Station"
         ]
     }
-
-# =====================
-# STATUS CHECK
-# =====================
 
 @router.get("/emergency/status")
 def system_status():
