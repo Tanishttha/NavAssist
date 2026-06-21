@@ -1,5 +1,4 @@
 const API_BASE = "http://localhost:8000";
-// ─── Helper: data URL → Blob (no extra fetch needed) ───────────────────────
 function base64ToBlob(dataUrl: string): Blob {
   const [header, base64] = dataUrl.split(",");
   const mime = header.match(/:(.*?);/)?.[1] ?? "image/jpeg";
@@ -11,7 +10,6 @@ function base64ToBlob(dataUrl: string): Blob {
   return new Blob([array], { type: mime });
 }
 
-// ─── Generic request helper ─────────────────────────────────────────────────
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 15000);
@@ -31,7 +29,6 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   }
 }
 
-// ─── Types ──────────────────────────────────────────────────────────────────
 export interface LatLng {
   lat: number;
   lng: number;
@@ -43,7 +40,7 @@ export interface NavStep {
   end_location?: LatLng;
   start_location?: LatLng;
   distance_meters?: number;
-  maneuver?: string; // turn-left, turn-right, straight, etc.
+  maneuver?: string; 
 }
 
 export interface NavigateRequest {
@@ -64,11 +61,10 @@ export interface NavigateResponse {
 }
 
 export interface CommandResult {
-  intent: string; // NAVIGATE | SOS | DETECTION | UNKNOWN
+  intent: string;
   destination?: string;
 }
 
-// ─── API ────────────────────────────────────────────────────────────────────
 export const api = {
   navigate: (payload: NavigateRequest | string) => {
     const body =
@@ -87,11 +83,10 @@ export const api = {
       return;
     }
 
-    // ✅ Convert without an extra fetch() call
     const blob = base64ToBlob(image);
 
     const formData = new FormData();
-    formData.append("file", blob, "frame.jpg"); // ✅ filename required by FastAPI
+    formData.append("file", blob, "frame.jpg"); 
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15000);
