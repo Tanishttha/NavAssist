@@ -7,7 +7,6 @@ import type { NavStep } from "@/lib/api";
 interface Props {
   steps: NavStep[];
   currentStep: number;
-  /** Distance (in meters) remaining to the end of the current step. */
   distanceToNext?: number | null;
 }
 
