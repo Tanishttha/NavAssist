@@ -16,10 +16,7 @@ def clean_html(raw_html):
 
 
 def get_google_maps_route(destination: str, origin: str):
-    """
-    🔥 Google Maps API integration (placeholder)
-    Replace API_KEY with your key
-    """
+
     try:
         API_KEY = "AIzaSyCv6dwB1BL3uF2uliD-rp10-xSu8bhmesI"
 
@@ -79,12 +76,6 @@ def get_google_maps_route(destination: str, origin: str):
 
 @router.post("/get-route")
 def get_route(data: RouteRequest):
-    """
-    🧭 Navigation API with:
-    ✔ Google Maps integration
-    ✔ Turn-by-turn step tracking
-    ✔ Voice auto instructions
-    """
 
     global current_step_index
 
