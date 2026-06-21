@@ -40,25 +40,20 @@ const MainScreen: React.FC = () => {
   const detectionRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const lastSpokenRef = useRef("");
 
-  // Welcome message
   useEffect(() => {
     const id = setTimeout(() => speak(t.welcome, speechLang), 1000);
     return () => clearTimeout(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Announce location errors
   useEffect(() => {
     if (locError) speak(t.locationFail, speechLang);
   }, [locError, t, speechLang]);
 
-  // Voice transcript -> mirror into search input AND auto-submit
   useEffect(() => {
     if (!transcript) return;
     searchRef.current?.setQuery(transcript);
     stop();
     handleTextSubmit(transcript);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transcript]);
 
   const handleSOS = async () => {
@@ -72,8 +67,6 @@ const MainScreen: React.FC = () => {
       }
     }
   };
-
-  // Receive simplified real Google steps from MapSection
   const handleStepsReady = useCallback((simple: string[]) => {
     setNavSteps(simple.map((s) => ({ instruction: s, distance: "" } as NavStep)));
     setCurrentStep(0);
@@ -91,7 +84,6 @@ const MainScreen: React.FC = () => {
     [navSteps, left, right]
   );
 
-  // Camera control
   useEffect(() => {
     if (navigating) {
       camera.start();
@@ -100,7 +92,6 @@ const MainScreen: React.FC = () => {
     }
   }, [navigating]);
 
-  // ─── Live Detection ───────────────────────────────────────────────────────
   useEffect(() => {
     if (!navigating) {
       if (detectionRef.current) clearInterval(detectionRef.current);
@@ -146,27 +137,21 @@ const tick = async () => {
 
     const objects: string[] = res.objects ?? [];
     if (objects.length === 0) return;
-
-    // ✅ Backend already "person slightly left" / "car ahead" deta hai
-    // Khud se "ahead" mat lagao
     const parsed = objects.map((obj) => {
       const tokens = obj.toLowerCase().trim().split(/\s+/);
       let position: "left" | "center" | "right" = "center";
       if (tokens.includes("left")) position = "left";
       else if (tokens.includes("right")) position = "right";
-
-      // label = pehla token (person, car, obstacle etc.)
       const label = tokens[0] || "object";
 
       return { label, position };
     });
 
-    // Priority: danger (center) > warning (left/right)
     const chosen =
       parsed.find((p) => p.position === "center") || parsed[0];
 
     const key = `${chosen.label}-${chosen.position}`;
-    if (lastSpokenRef.current === key) return; // Same cheez dobara mat bolo
+    if (lastSpokenRef.current === key) return; 
     lastSpokenRef.current = key;
 
     const obj: DetectedObject = {
@@ -194,7 +179,6 @@ const tick = async () => {
     };
   }, [navigating, danger, left, right]);
 
-  // Push live location to backend periodically while navigating
   useEffect(() => {
     if (!navigating || !location) return;
     api.sendLocation({ latitude: location.lat, longitude: location.lng }).catch(() => {});
