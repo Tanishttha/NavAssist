@@ -19,14 +19,7 @@ WARNING_DIST = 4.0
 
 
 def process_navigation(route_data: dict):
-    """
-    Normalize navigation payload (from /navigate or maps)
-    Expected:
-      {
-        "steps": [{ "text": "...", "type": "left|right|forward" }],
-        "eta": "..."
-      }
-    """
+   
     if not route_data:
         return {
             "action": "INFO",
@@ -58,10 +51,6 @@ def process_navigation(route_data: dict):
 
 
 def generate_alert(objects: list, distance: float):
-    """
-    From detection → produce alert (no navigation here)
-    Returns dict with action/priority/message/level
-    """
     objects = set(objects or [])
     if distance is not None and distance < DANGER_DIST:
         if objects & DANGER_OBJECTS:
@@ -102,27 +91,12 @@ def generate_alert(objects: list, distance: float):
 
 
 def decide(objects: list, distance: float, route_data: dict):
-    """
-    🔁 Final decision combiner
-    Priority:
-      alert (danger/warning) > navigation > info
-    """
     alert = generate_alert(objects, distance)
     nav = process_navigation(route_data)
     if alert["priority"] <= nav["priority"]:
         return alert
 
     return nav
-"""
-🧠 Decision Engine (Enhanced)
-Combines navigation + detection → outputs action, message, priority, level, meta.
-Priority (lower = higher priority):
-1. EMERGENCY
-2. DANGER (immediate obstacle)
-3. WARNING (near obstacle)
-4. NAVIGATION
-5. INFO
-"""
 
 from time import time
 PRIORITY = {
@@ -156,9 +130,6 @@ def _cooldown_ok(key: str):
 
 
 def process_navigation(route_data: dict):
-    """
-    Normalize navigation payload
-    """
     if not route_data:
         return {
             "action": "INFO",
@@ -193,9 +164,6 @@ def process_navigation(route_data: dict):
 
 
 def generate_alert(objects: list, distance: float):
-    """
-    Detection → alert (priority aware, multi-object aware)
-    """
     objects = set(objects or [])
 
     if distance is None:
@@ -260,10 +228,6 @@ def generate_alert(objects: list, distance: float):
 
 
 def decide(objects: list, distance: float, route_data: dict):
-    """
-    🔁 Final decision combiner
-    alert > navigation > info
-    """
     alert = generate_alert(objects, distance)
     nav = process_navigation(route_data)
 
