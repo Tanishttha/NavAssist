@@ -11,17 +11,14 @@ from services.decision_engine import decide
 from services.voice_service import generate_voice_output
 from services.haptic_service import get_haptic_pattern
 
-# 🧠 Simple processing throttle
 _last_process_time = 0
-PROCESS_INTERVAL = 0.5  # seconds
+PROCESS_INTERVAL = 0.5  
 
-# 🎯 Relevant objects for filtering
 IMPORTANT_OBJECTS = {
     "person", "car", "truck", "bus",
     "bicycle", "motorcycle", "stairs"
 }
 
-# 🎯 Confidence threshold
 CONFIDENCE_THRESHOLD = 0.5
 
 
@@ -39,24 +36,16 @@ def detect_objects(frame) -> List[Dict[str, Any]]:
     """
 
     try:
-        # 🚀 Dummy detection (simulate real output)
         detections = [
             {"object": "person", "confidence": 0.9},
             {"object": "chair", "confidence": 0.4},
         ]
-
-        # 🔮 Future: Replace above with YOLO model inference
-        # results = model(frame)
-        # parse results here
-
-        # 🧠 Filter only important objects + confidence threshold
         filtered = []
         for d in detections:
             logging.debug(f"Detected {d['object']} with confidence {d['confidence']}")
             if d["object"] in IMPORTANT_OBJECTS and d["confidence"] > CONFIDENCE_THRESHOLD:
                 filtered.append(d)
 
-        # 📏 Attach dummy distance per object (future: real depth mapping)
         for obj in filtered:
             obj["distance"] = 1.5
 
@@ -80,10 +69,8 @@ def estimate_distance(frame=None) -> float:
     """
 
     try:
-        # 🚀 Dummy logic
         distance = 1.5
 
-        # 🛡️ Safety clamp
         if distance < 0:
             distance = 0
         if distance > 100:
@@ -135,10 +122,8 @@ def process_frame(frame) -> Dict[str, Any]:
     if not objects:
         logging.warning("No important objects detected")
 
-    # 🧹 Deduplicate objects
     unique_objects = list(set([obj["object"] for obj in objects]))
 
-    # 🧠 Prepare integration-ready payload
     result_payload = {
         "objects": unique_objects,
         "detailed_objects": objects,
@@ -146,15 +131,12 @@ def process_frame(frame) -> Dict[str, Any]:
     }
 
     return result_payload
-
-# 🚀 FULL PIPELINE HELPER (FINAL STEP)
 def run_ai_pipeline(frame, route_data=None):
     """
     🚀 FULL AI + DECISION + OUTPUT PIPELINE
     """
     data = process_frame(frame)
 
-    # 🧠 Decision Engine
     result = decide(
         data.get("objects", []),
         data.get("distance", 999),
