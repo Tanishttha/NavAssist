@@ -1,4 +1,3 @@
-# location_tracker.py
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
@@ -11,10 +10,6 @@ router = APIRouter(
     prefix="/location",
     tags=["Location Tracker"]
 )
-
-# =====================================
-# MODELS
-# =====================================
 
 class LocationUpdate(BaseModel):
     user_id: str
@@ -32,18 +27,9 @@ class GeoFence(BaseModel):
     radius: float
 
 
-# =====================================
-# MOCK DATABASE
-# =====================================
-
 locations_db = []
 geofences_db = []
 tracking_sessions = []
-
-
-# =====================================
-# UTILITIES
-# =====================================
 
 def generate_id():
     return str(uuid.uuid4())
@@ -86,11 +72,6 @@ def get_user_locations(user_id):
         if item["user_id"] == user_id
     ]
 
-
-# =====================================
-# LOCATION UPDATE
-# =====================================
-
 @router.post("/update")
 def update_location(
     data: LocationUpdate
@@ -114,11 +95,6 @@ def update_location(
         "location_id": location["id"]
     }
 
-
-# =====================================
-# LAST LOCATION
-# =====================================
-
 @router.get("/last/{user_id}")
 def last_location(user_id: str):
 
@@ -133,10 +109,6 @@ def last_location(user_id: str):
     return records[-1]
 
 
-# =====================================
-# LOCATION HISTORY
-# =====================================
-
 @router.get("/history/{user_id}")
 def location_history(
     user_id: str
@@ -148,11 +120,6 @@ def location_history(
         ),
         "history": get_user_locations(user_id)
     }
-
-
-# =====================================
-# TOTAL DISTANCE
-# =====================================
 
 @router.get("/distance/{user_id}")
 def total_distance(
@@ -190,10 +157,6 @@ def total_distance(
     }
 
 
-# =====================================
-# AVG SPEED
-# =====================================
-
 @router.get("/average-speed/{user_id}")
 def average_speed(
     user_id: str
@@ -224,10 +187,6 @@ def average_speed(
     }
 
 
-# =====================================
-# START TRACKING SESSION
-# =====================================
-
 @router.post("/session/start")
 def start_tracking(
     user_id: str
@@ -245,10 +204,6 @@ def start_tracking(
     )
 
     return session
-# =====================================
-# GEOFENCE MANAGEMENT
-# =====================================
-
 @router.post("/geofence/create")
 def create_geofence(
     geofence: GeoFence
@@ -297,11 +252,6 @@ def delete_geofence(
         "success": True
     }
 
-
-# =====================================
-# CHECK GEOFENCE
-# =====================================
-
 @router.get(
     "/geofence/check/{user_id}"
 )
@@ -340,10 +290,6 @@ def check_geofence(
 
     return results
 
-
-# =====================================
-# LIVE TRACKING SHARE
-# =====================================
 
 share_links = []
 
@@ -404,10 +350,6 @@ def get_shared_location(
     return locations[-1]
 
 
-# =====================================
-# ROUTE REPLAY
-# =====================================
-
 @router.get(
     "/route-replay/{user_id}"
 )
@@ -437,11 +379,6 @@ def route_replay(
         "route": route
     }
 
-
-# =====================================
-# BATTERY MONITOR
-# =====================================
-
 @router.get(
     "/battery/{user_id}"
 )
@@ -465,11 +402,6 @@ def battery_status(
         "battery":
         latest["battery"]
     }
-
-
-# =====================================
-# LOW BATTERY ALERT
-# =====================================
 
 @router.get(
     "/battery-alert/{user_id}"
@@ -496,11 +428,6 @@ def battery_alert(
         and battery < 20
     }
 
-
-# =====================================
-# LOCATION ACCURACY
-# =====================================
-
 @router.get(
     "/accuracy/{user_id}"
 )
@@ -523,11 +450,6 @@ def location_accuracy(
         records[-1]["accuracy"]
     }
 
-
-# =====================================
-# CURRENT SPEED
-# =====================================
-
 @router.get("/speed/{user_id}")
 def current_speed(
     user_id: str
@@ -547,10 +469,6 @@ def current_speed(
         "speed":
         records[-1]["speed"]
     }
-# =====================================
-# EMERGENCY CONTACTS
-# =====================================
-
 emergency_contacts = []
 
 
@@ -593,11 +511,6 @@ def get_emergency_contacts(
         for c in emergency_contacts
         if c["user_id"] == user_id
     ]
-
-
-# =====================================
-# SOS ALERT
-# =====================================
 
 sos_alerts = []
 
@@ -643,11 +556,6 @@ def trigger_sos(
 def get_all_sos():
 
     return sos_alerts
-
-
-# =====================================
-# SAFE ARRIVAL SYSTEM
-# =====================================
 
 safe_arrivals = []
 
@@ -734,10 +642,6 @@ def check_safe_arrival(
     }
 
 
-# =====================================
-# CRASH DETECTION
-# =====================================
-
 crash_events = []
 
 
@@ -778,9 +682,6 @@ def crash_detection(
     }
 
 
-# =====================================
-# JOURNEY ANALYTICS
-# =====================================
 
 @router.get(
     "/analytics/{user_id}"
@@ -837,10 +738,6 @@ def journey_analytics(
         len(records)
     }
 
-
-# =====================================
-# MOST VISITED LOCATION
-# =====================================
 
 @router.get(
     "/analytics/hotspot/{user_id}"
