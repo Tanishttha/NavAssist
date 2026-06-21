@@ -1,6 +1,3 @@
-# ====================================================
-# Wake Word Detection
-# ====================================================
 
 WAKE_WORDS = [
     "hey navassist",
@@ -28,10 +25,6 @@ def check_wake_word(text: str):
         "detected": detected,
         "wake_word": matched_word
     }
-
-# ====================================================
-# Supported Languages
-# ====================================================
 
 SUPPORTED_LANGUAGES = [
     "en",
@@ -82,10 +75,6 @@ def change_language(
         "language": request.language
     }
 
-# ====================================================
-# Voice History
-# ====================================================
-
 @router.get("/history/{user_id}")
 def get_voice_history(user_id: str):
 
@@ -119,10 +108,6 @@ def clear_history(user_id: str):
         "deleted": len(delete_ids)
     }
 
-# ====================================================
-# Frequently Used Commands
-# ====================================================
-
 @router.get("/frequent/{user_id}")
 def get_frequent_commands(user_id: str):
 
@@ -149,10 +134,6 @@ def get_frequent_commands(user_id: str):
         "commands": sorted_commands[:10]
     }
 
-# ====================================================
-# Voice Suggestions
-# ====================================================
-
 VOICE_SUGGESTIONS = [
     "Navigate Home",
     "Read Text",
@@ -171,10 +152,6 @@ def get_suggestions():
         "suggestions":
             VOICE_SUGGESTIONS
     }
-
-# ====================================================
-# Analytics APIs
-# ====================================================
 
 @router.get("/analytics/{user_id}")
 def get_voice_analytics(user_id: str):
@@ -215,10 +192,6 @@ def global_voice_analytics():
         "sos": total_sos
     }
 
-# ====================================================
-# Voice Command Score
-# ====================================================
-
 @router.get("/score/{user_id}")
 def calculate_voice_score(
     user_id: str
@@ -242,10 +215,6 @@ def calculate_voice_score(
         "voice_score": score
     }
 
-# ====================================================
-# Export Data
-# ====================================================
-
 @router.get("/export/{user_id}")
 def export_voice_data(
     user_id: str
@@ -267,10 +236,6 @@ def export_voice_data(
         "history":
             history
     }
-
-# ====================================================
-# Admin Dashboard
-# ====================================================
 
 @router.get("/admin/dashboard")
 def admin_dashboard():
@@ -300,9 +265,6 @@ def admin_dashboard():
         "registered_users":
             len(VOICE_ANALYTICS)
     }
-# ====================================================
-# Voice Command Categories
-# ====================================================
 
 COMMAND_CATEGORIES = {
     "navigation": [
@@ -332,11 +294,6 @@ COMMAND_CATEGORIES = {
 def get_categories():
 
     return COMMAND_CATEGORIES
-
-
-# ====================================================
-# Favorite Commands
-# ====================================================
 
 USER_FAVORITES = {}
 
@@ -370,11 +327,6 @@ def get_favorites(
                 []
             )
     }
-
-
-# ====================================================
-# Voice Notifications
-# ====================================================
 
 VOICE_NOTIFICATIONS = {}
 
@@ -422,11 +374,6 @@ def get_notifications(
             results
     }
 
-
-# ====================================================
-# Command Search
-# ====================================================
-
 @router.get("/search")
 def search_command(
     query: str
@@ -448,11 +395,6 @@ def search_command(
     return {
         "results": matches
     }
-
-
-# ====================================================
-# Leaderboard
-# ====================================================
 
 @router.get("/leaderboard")
 def voice_leaderboard():
@@ -486,11 +428,6 @@ def voice_leaderboard():
             ranking[:20]
     }
 
-
-# ====================================================
-# Caregiver Voice Shortcut
-# ====================================================
-
 CAREGIVER_SHORTCUTS = {}
 
 @router.post("/caregiver/save")
@@ -520,11 +457,6 @@ def get_caregiver(
             )
     }
 
-
-# ====================================================
-# Quick Commands
-# ====================================================
-
 QUICK_COMMANDS = [
     "Navigate Home",
     "Call Caregiver",
@@ -543,11 +475,6 @@ def quick_commands():
         "commands":
             QUICK_COMMANDS
     }
-
-
-# ====================================================
-# System Health
-# ====================================================
 
 @router.get("/health")
 def health():
