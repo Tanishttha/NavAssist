@@ -1,5 +1,3 @@
-# settings.py
-
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional
@@ -11,15 +9,7 @@ router = APIRouter(
     tags=["Settings"]
 )
 
-# =====================================
-# DATABASE
-# =====================================
-
 settings_db = []
-
-# =====================================
-# MODELS
-# =====================================
 
 class UserSettings(BaseModel):
     user_id: str
@@ -43,9 +33,6 @@ class UserSettings(BaseModel):
     route_voice_guidance: Optional[bool] = True
 
 
-# =====================================
-# HELPERS
-# =====================================
 
 def generate_id():
     return str(uuid.uuid4())
@@ -54,10 +41,6 @@ def generate_id():
 def current_time():
     return datetime.utcnow()
 
-
-# =====================================
-# CREATE SETTINGS
-# =====================================
 
 @router.post("/create")
 def create_settings(
@@ -121,10 +104,6 @@ def create_settings(
     return settings
 
 
-# =====================================
-# GET SETTINGS
-# =====================================
-
 @router.get("/{user_id}")
 def get_settings(
     user_id: str
@@ -148,9 +127,6 @@ def get_settings(
     return settings
 
 
-# =====================================
-# UPDATE LANGUAGE
-# =====================================
 
 @router.put("/language")
 def update_language(
@@ -181,10 +157,6 @@ def update_language(
     }
 
 
-# =====================================
-# DARK MODE
-# =====================================
-
 @router.put("/dark-mode")
 def dark_mode(
     user_id: str,
@@ -213,9 +185,6 @@ def dark_mode(
     }
 
 
-# =====================================
-# VOICE SETTINGS
-# =====================================
 
 @router.put("/voice")
 def voice_settings(
@@ -245,10 +214,6 @@ def voice_settings(
     }
 
 
-# =====================================
-# NOTIFICATION SETTINGS
-# =====================================
-
 @router.put("/notifications")
 def notifications(
     user_id: str,
@@ -277,9 +242,6 @@ def notifications(
     }
 
 
-# =====================================
-# VIBRATION SETTINGS
-# =====================================
 
 @router.put("/vibration")
 def vibration(
@@ -308,10 +270,6 @@ def vibration(
         "success": True
     }
 
-
-# =====================================
-# FONT SIZE
-# =====================================
 
 @router.put("/font-size")
 def font_size(
@@ -355,9 +313,6 @@ def font_size(
     }
 
 
-# =====================================
-# LOCATION TRACKING
-# =====================================
 
 @router.put("/location-tracking")
 def location_tracking(
@@ -387,10 +342,6 @@ def location_tracking(
     }
 
 
-# =====================================
-# EMERGENCY ALERTS
-# =====================================
-
 @router.put("/emergency-alerts")
 def emergency_alerts(
     user_id: str,
@@ -419,10 +370,6 @@ def emergency_alerts(
     }
 
 
-# =====================================
-# ROUTE VOICE GUIDANCE
-# =====================================
-
 @router.put("/route-guidance")
 def route_guidance(
     user_id: str,
@@ -449,9 +396,7 @@ def route_guidance(
     return {
         "success": True
     }
-# =====================================
-# ACCESSIBILITY SETTINGS
-# =====================================
+
 
 @router.put("/accessibility/high-contrast")
 def high_contrast_mode(
@@ -536,10 +481,6 @@ def text_scale(
     }
 
 
-# =====================================
-# AI ASSISTANT SETTINGS
-# =====================================
-
 @router.put("/ai/enabled")
 def ai_enabled(
     user_id: str,
@@ -600,10 +541,6 @@ def ai_voice_style(
     }
 
 
-# =====================================
-# PRIVACY SETTINGS
-# =====================================
-
 @router.put("/privacy/location-history")
 def location_history_visibility(
     user_id: str,
@@ -646,9 +583,6 @@ def share_analytics_data(
     }
 
 
-# =====================================
-# SECURITY SETTINGS
-# =====================================
 
 @router.put("/security/biometric")
 def biometric_login(
@@ -692,9 +626,6 @@ def update_pin(
     }
 
 
-# =====================================
-# TRUSTED CONTACTS
-# =====================================
 
 trusted_contacts = []
 
@@ -734,9 +665,6 @@ def get_trusted_contacts(
     ]
 
 
-# =====================================
-# DEVICE MANAGEMENT
-# =====================================
 
 devices_db = []
 
@@ -773,10 +701,6 @@ def user_devices(
         if d["user_id"] == user_id
     ]
 
-
-# =====================================
-# BACKUP SETTINGS
-# =====================================
 
 backups_db = []
 
@@ -815,10 +739,6 @@ def get_backups(
         if b["user_id"] == user_id
     ]
 
-
-# =====================================
-# THEME SETTINGS
-# =====================================
 
 @router.put("/theme")
 def update_theme(
