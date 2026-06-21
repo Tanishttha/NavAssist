@@ -1,6 +1,4 @@
 import { useState, useCallback, useRef } from "react";
-
-// TTS Queue - speaks one after another, never overlapping
 export const useTextToSpeech = () => {
   const queueRef = useRef<Array<{ text: string; lang: string }>>([]);
   const speakingRef = useRef(false);
