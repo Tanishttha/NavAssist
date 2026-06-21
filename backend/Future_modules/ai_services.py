@@ -1,7 +1,3 @@
-"""
-AI Service
-Handles object detection + distance estimation (extensible for YOLO / MiDaS)
-"""
 
 import logging
 from typing import List, Dict, Any
