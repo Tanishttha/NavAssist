@@ -1,5 +1,3 @@
-# payments.py
-
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from datetime import datetime
@@ -10,10 +8,6 @@ router = APIRouter(
     prefix="/payments",
     tags=["Payments"]
 )
-
-# =====================================
-# MODELS
-# =====================================
 
 class PaymentRequest(BaseModel):
     user_id: str
@@ -32,18 +26,10 @@ class RefundRequest(BaseModel):
     reason: str
 
 
-# =====================================
-# MOCK DATABASES
-# =====================================
-
 payments_db = []
 wallet_db = []
 refunds_db = []
 
-
-# =====================================
-# UTILITIES
-# =====================================
 
 def generate_id():
     return str(uuid.uuid4())
@@ -52,10 +38,6 @@ def generate_id():
 def now():
     return datetime.utcnow()
 
-
-# =====================================
-# WALLET
-# =====================================
 
 @router.post("/wallet/create")
 def create_wallet(user_id: str):
@@ -105,10 +87,6 @@ def get_wallet(user_id: str):
     return wallet
 
 
-# =====================================
-# RECHARGE WALLET
-# =====================================
-
 @router.post("/wallet/recharge")
 def recharge_wallet(
     data: WalletRecharge
@@ -137,10 +115,6 @@ def recharge_wallet(
         wallet["balance"]
     }
 
-
-# =====================================
-# CREATE PAYMENT
-# =====================================
 
 @router.post("/create")
 def create_payment(
@@ -177,10 +151,6 @@ def create_payment(
     return transaction
 
 
-# =====================================
-# VERIFY PAYMENT
-# =====================================
-
 @router.post("/verify/{payment_id}")
 def verify_payment(
     payment_id: str
@@ -209,11 +179,6 @@ def verify_payment(
         "payment": payment
     }
 
-
-# =====================================
-# PAYMENT STATUS
-# =====================================
-
 @router.get("/{payment_id}")
 def payment_status(
     payment_id: str
@@ -238,10 +203,6 @@ def payment_status(
     return payment
 
 
-# =====================================
-# PAYMENT HISTORY
-# =====================================
-
 @router.get("/history/{user_id}")
 def payment_history(
     user_id: str
@@ -262,9 +223,6 @@ def payment_history(
     }
 
 
-# =====================================
-# REFUND
-# =====================================
 
 @router.post("/refund")
 def refund_payment(
@@ -314,9 +272,6 @@ def refund_payment(
     return refund
 
 
-# =====================================
-# ALL REFUNDS
-# =====================================
 
 @router.get("/refunds/all")
 def all_refunds():
@@ -330,9 +285,6 @@ def all_refunds():
     }
 
 
-# =====================================
-# WALLET PAYMENT
-# =====================================
 
 @router.post("/wallet/pay")
 def pay_using_wallet(
@@ -394,9 +346,6 @@ def pay_using_wallet(
         "payment":
         transaction
     }
-# =====================================
-# COUPON SYSTEM
-# =====================================
 
 coupons_db = []
 
@@ -471,10 +420,6 @@ def apply_coupon(
     }
 
 
-# =====================================
-# GST CALCULATOR
-# =====================================
-
 @router.get("/gst")
 def calculate_gst(
     amount: float,
@@ -500,10 +445,6 @@ def calculate_gst(
         )
     }
 
-
-# =====================================
-# SUBSCRIPTIONS
-# =====================================
 
 subscriptions_db = []
 
@@ -562,9 +503,6 @@ def get_subscription(
     ]
 
 
-# =====================================
-# INVOICE GENERATION
-# =====================================
 
 invoices_db = []
 
@@ -613,10 +551,6 @@ def generate_invoice(
     return invoice
 
 
-# =====================================
-# PAYMENT ANALYTICS
-# =====================================
-
 @router.get("/analytics")
 def payment_analytics():
 
@@ -664,10 +598,6 @@ def payment_analytics():
     }
 
 
-# =====================================
-# ADMIN DASHBOARD
-# =====================================
-
 @router.get("/admin/stats")
 def admin_stats():
 
@@ -692,10 +622,6 @@ def admin_stats():
         len(coupons_db)
     }
 
-
-# =====================================
-# MOCK RAZORPAY
-# =====================================
 
 @router.post("/razorpay/order")
 def create_razorpay_order(
@@ -735,10 +661,6 @@ def verify_razorpay_payment(
         payment_id
     }
 
-
-# =====================================
-# MOCK UPI PAYMENT
-# =====================================
 
 @router.post("/upi/pay")
 def upi_payment(
