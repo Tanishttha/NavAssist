@@ -19,7 +19,6 @@ const EmergencyButton: React.FC<Props> = ({ location }) => {
     danger();
     speak(t.emergencyCall, speechLang);
 
-    // Get fresh location and send to backend
     const sendWith = (lat: number, lng: number) =>
       api.sendSOS({ latitude: lat, longitude: lng }).catch(() => {});
 
