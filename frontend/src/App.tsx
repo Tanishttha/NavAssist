@@ -10,17 +10,12 @@ import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
-
-// ─── Permissions Hook ───────────────────────────────────────────────────────
 const usePermissions = () => {
   useEffect(() => {
-    // 📍 Location
     navigator.geolocation.getCurrentPosition(
       () => console.log("✅ Location granted"),
       (err) => console.warn("❌ Location denied:", err.message)
     );
-
-    // 🎤 Microphone
     navigator.mediaDevices
       .getUserMedia({ audio: true })
       .then((stream) => {
@@ -29,7 +24,6 @@ const usePermissions = () => {
       })
       .catch((err) => console.warn("❌ Mic denied:", err.message));
 
-    // 📷 Camera
     navigator.mediaDevices
       .getUserMedia({ video: true })
       .then((stream) => {
@@ -38,19 +32,15 @@ const usePermissions = () => {
       })
       .catch((err) => console.warn("❌ Camera denied:", err.message));
 
-    // 🔊 Speaker test (Web Speech API)
     if ("speechSynthesis" in window) {
       console.log("✅ Speaker ready");
     } else {
       console.warn("❌ Speaker not supported");
     }
 
-    // 🚫 Pull-to-refresh band
     document.body.style.overscrollBehavior = "none";
-  }, []); // sirf ek baar — app open hone pe
+  }, []);
 };
-
-// ─── App ────────────────────────────────────────────────────────────────────
 const App = () => {
   usePermissions();
 
