@@ -8,18 +8,10 @@ router = APIRouter(
     tags=["Wallet"]
 )
 
-# ==========================================
-# Dummy Storage
-# ==========================================
-
 WALLETS = {}
 TRANSACTIONS = {}
 WITHDRAWALS = {}
 PAYMENT_REQUESTS = {}
-
-# ==========================================
-# Models
-# ==========================================
 
 class WalletCreate(BaseModel):
     user_id: str
@@ -36,10 +28,6 @@ class TransferRequest(BaseModel):
 class WithdrawRequest(BaseModel):
     user_id: str
     amount: float
-
-# ==========================================
-# Wallet Creation
-# ==========================================
 
 @router.post("/create")
 def create_wallet(
@@ -67,10 +55,6 @@ def create_wallet(
         "wallet_id": wallet_id
     }
 
-# ==========================================
-# Wallet Balance
-# ==========================================
-
 @router.get("/balance/{user_id}")
 def get_balance(user_id: str):
 
@@ -86,10 +70,6 @@ def get_balance(user_id: str):
         "user_id": user_id,
         "balance": wallet["balance"]
     }
-
-# ==========================================
-# Add Money
-# ==========================================
 
 @router.post("/add-money")
 def add_money(
@@ -125,10 +105,6 @@ def add_money(
         "new_balance":
             wallet["balance"]
     }
-
-# ==========================================
-# Transfer Money
-# ==========================================
 
 @router.post("/transfer")
 def transfer_money(
@@ -185,10 +161,6 @@ def transfer_money(
         "transaction_id": txn_id
     }
 
-# ==========================================
-# Withdraw Money
-# ==========================================
-
 @router.post("/withdraw")
 def withdraw_money(
     payload: WithdrawRequest
@@ -236,10 +208,6 @@ def withdraw_money(
             withdrawal_id
     }
 
-# ==========================================
-# Transaction History
-# ==========================================
-
 @router.get("/transactions/{user_id}")
 def transaction_history(
     user_id: str
@@ -275,10 +243,6 @@ def transaction_history(
             result
     }
 
-# ==========================================
-# Wallet Stats
-# ==========================================
-
 @router.get("/stats")
 def wallet_stats():
 
@@ -302,9 +266,6 @@ def wallet_stats():
                 TRANSACTIONS
             )
     }
-# ==========================================
-# Cashback System
-# ==========================================
 
 CASHBACK_HISTORY = {}
 
@@ -351,10 +312,6 @@ def apply_cashback(
             wallet["balance"]
     }
 
-# ==========================================
-# Reward Points
-# ==========================================
-
 REWARD_POINTS = {}
 
 @router.post("/rewards/add")
@@ -390,10 +347,6 @@ def get_rewards(
             )
     }
 
-# ==========================================
-# Coupon System
-# ==========================================
-
 COUPONS = {
     "WELCOME50": 50,
     "NAV100": 100,
@@ -420,10 +373,6 @@ def apply_coupon(
         "coupon": coupon,
         "discount": discount
     }
-
-# ==========================================
-# Referral System
-# ==========================================
 
 REFERRALS = {}
 
@@ -455,10 +404,6 @@ def get_referral(
                 user_id
             )
     }
-
-# ==========================================
-# Razorpay Dummy Order
-# ==========================================
 
 RAZORPAY_ORDERS = {}
 
@@ -492,10 +437,6 @@ def create_order(
         "currency":
             "INR"
     }
-
-# ==========================================
-# Razorpay Verify
-# ==========================================
 
 @router.post("/razorpay/verify")
 def verify_payment(
@@ -532,10 +473,6 @@ def verify_payment(
         "status": "paid"
     }
 
-# ==========================================
-# Wallet Ranking
-# ==========================================
-
 @router.get("/leaderboard")
 def wallet_leaderboard():
 
@@ -561,10 +498,6 @@ def wallet_leaderboard():
         "leaderboard":
             ranking[:20]
     }
-
-# ==========================================
-# Admin Dashboard
-# ==========================================
 
 @router.get("/admin/dashboard")
 def admin_dashboard():
@@ -595,10 +528,6 @@ def admin_dashboard():
         "reward_points":
             total_rewards
     }
-
-# ==========================================
-# Wallet Health Check
-# ==========================================
 
 @router.get("/health")
 def health():
