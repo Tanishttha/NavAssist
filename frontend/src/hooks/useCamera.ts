@@ -11,12 +11,10 @@ export const useCamera = () => {
       let stream: MediaStream;
 
       try {
-        // try back camera (mobile)
         stream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: { exact: "environment" } },
         });
       } catch {
-        // fallback for laptop / unsupported devices
         stream = await navigator.mediaDevices.getUserMedia({
           video: true,
         });
@@ -31,7 +29,6 @@ export const useCamera = () => {
 
         const video = videoRef.current;
 
-        // 🔥 reset stream
         video.srcObject = null;
         video.srcObject = stream;
 
