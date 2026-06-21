@@ -40,7 +40,6 @@ const speak = (text: string) => {
   window.speechSynthesis.speak(u);
 };
 
-// Haversine distance in meters
 const distMeters = (a: { lat: number; lng: number }, b: { lat: number; lng: number }) => {
   const R = 6371000;
   const toRad = (d: number) => (d * Math.PI) / 180;
@@ -68,7 +67,6 @@ const MapSection: React.FC<Props> = ({ userLocation, destination, onStepsReady, 
   const stepsRef = useRef<google.maps.DirectionsStep[]>([]);
   const currentStepRef = useRef(0);
 
-  // Request directions once per origin->destination pair
   useEffect(() => {
     if (!isLoaded || !userLocation || !destination) return;
     const key = `${userLocation.lat.toFixed(4)},${userLocation.lng.toFixed(4)}->${destination.lat},${destination.lng}`;
@@ -100,7 +98,6 @@ const MapSection: React.FC<Props> = ({ userLocation, destination, onStepsReady, 
     );
   }, [isLoaded, userLocation, destination, onStepsReady, onStepChange]);
 
-  // Reset when destination cleared
   useEffect(() => {
     if (!destination) {
       requestedKeyRef.current = "";
@@ -110,7 +107,6 @@ const MapSection: React.FC<Props> = ({ userLocation, destination, onStepsReady, 
     }
   }, [destination]);
 
-  // Watch user location vs current step end_location
   useEffect(() => {
     if (!userLocation || stepsRef.current.length === 0) return;
     const idx = currentStepRef.current;
