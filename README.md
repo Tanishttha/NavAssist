@@ -188,7 +188,9 @@ Triggers emergency assistance functionality.
 * Enhanced accessibility analytics
 
 <h2>Live Demo</h2>
-https://nav-assist-main.vercel.app
 
+```bash
+https://nav-assist-main.vercel.app
+```
 <h2>License</h2>
 This project is licensed under the MIT License.
