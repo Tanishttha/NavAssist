@@ -19,17 +19,6 @@ CONFIDENCE_THRESHOLD = 0.5
 
 
 def detect_objects(frame) -> List[Dict[str, Any]]:
-    """
-    Placeholder detection (replace with YOLO integration later)
-
-    Returns:
-    [
-        {
-            "object": str,
-            "confidence": float
-        }
-    ]
-    """
 
     try:
         detections = [
@@ -57,12 +46,7 @@ def detect_objects(frame) -> List[Dict[str, Any]]:
 
 
 def estimate_distance(frame=None) -> float:
-    """
-    Placeholder distance estimation (replace with MiDaS / depth model later)
 
-    Returns:
-        float (meters)
-    """
 
     try:
         distance = 1.5
@@ -80,15 +64,7 @@ def estimate_distance(frame=None) -> float:
 
 
 def process_frame(frame) -> Dict[str, Any]:
-    """
-    🔁 Main AI pipeline
 
-    Returns:
-    {
-        "objects": [...],
-        "distance": float
-    }
-    """
     from time import time
     global _last_process_time
 
@@ -128,9 +104,6 @@ def process_frame(frame) -> Dict[str, Any]:
 
     return result_payload
 def run_ai_pipeline(frame, route_data=None):
-    """
-    🚀 FULL AI + DECISION + OUTPUT PIPELINE
-    """
     data = process_frame(frame)
 
     result = decide(
