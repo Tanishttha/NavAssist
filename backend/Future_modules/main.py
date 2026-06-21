@@ -14,26 +14,10 @@ import re
 from fastapi import Request
 import numpy as np
 import os
-
-# ─────────────────────────────────────────────
-# Logging
-# ─────────────────────────────────────────────
 logging.basicConfig(level=logging.INFO)
 
-# ─────────────────────────────────────────────
-# YOLO model
-# ─────────────────────────────────────────────
 model = YOLO("yolov8n.pt")
-
-# ─────────────────────────────────────────────
-# Named objects — inका naam bolta hai
-# Baaki sab ke liye sirf "obstacle"
-# ─────────────────────────────────────────────
 NAMED_OBJECTS = {"person", "car", "truck", "bus", "bicycle", "motorcycle", "dog"}
-
-# ─────────────────────────────────────────────
-# Global camera
-# ─────────────────────────────────────────────
 camera_lock = Lock()
 camera = None
 if camera is not None and not camera.isOpened():
@@ -47,10 +31,6 @@ def read_frame():
         ret, frame = camera.read()
     return ret, frame
 
-
-# ─────────────────────────────────────────────
-# Voice queue
-# ─────────────────────────────────────────────
 MAX_QUEUE = 20
 voice_queue: deque = deque()
 voice_lock = Lock()
@@ -63,10 +43,6 @@ def enqueue_voice(message: str):
         if not voice_queue or voice_queue[-1] != message:
             voice_queue.append(message)
 
-
-# ─────────────────────────────────────────────
-# TTS Worker
-# ─────────────────────────────────────────────
 def tts_worker():
     print("TTS WORKER STARTED")
     while True:
@@ -79,25 +55,13 @@ def tts_worker():
         else:
             time.sleep(0.05)
 
-
-# ─────────────────────────────────────────────
-# Detection state
-# ─────────────────────────────────────────────
 detect_lock = Lock()
 last_detect_call: float = 0.0
 DETECT_COOLDOWN = 0
-
-# ─────────────────────────────────────────────
-# Navigation state
-# ─────────────────────────────────────────────
 nav_lock = Lock()
 current_route_steps: list = []
 current_step_index: int = 0
 last_spoken_step: str = ""
-
-# ─────────────────────────────────────────────
-# Constants
-# ─────────────────────────────────────────────
 PRIORITY_MAP = {
     "person": 3, "car": 3, "truck": 3, "bus": 3,
     "chair": 3, "bottle": 3, "table": 3, "dog": 3, "cat": 3,
@@ -114,9 +78,6 @@ def get_direction(box_center_x: float, frame_width: int) -> str:
     return "ahead"
 
 
-# ─────────────────────────────────────────────
-# Haversine distance
-# ─────────────────────────────────────────────
 def haversine(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
     R = 6_371_000
     phi1, phi2 = math.radians(lat1), math.radians(lat2)
@@ -126,9 +87,6 @@ def haversine(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
     return R * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
 
-# ─────────────────────────────────────────────
-# Lifespan
-# ─────────────────────────────────────────────
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     Thread(target=tts_worker, daemon=True).start()
@@ -139,9 +97,6 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-# ─────────────────────────────────────────────
-# Middleware
-# ─────────────────────────────────────────────
 @app.middleware("http")
 async def log_requests(request, call_next):
     logging.info(f"{request.method} {request.url}")
@@ -161,10 +116,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-# ─────────────────────────────────────────────
-# Routes
-# ─────────────────────────────────────────────
 
 @app.get("/")
 def home():
@@ -361,10 +312,6 @@ def update_location(data: dict):
             "step_index": current_step_index
         }
 
-
-# ─────────────────────────────────────────────
-# Image detection from posted image
-# ─────────────────────────────────────────────
 @app.post("/detect-image")
 async def detect_image(file: UploadFile = File(...)):
     logging.info("/detect-image HIT")
@@ -383,35 +330,25 @@ async def detect_image(file: UploadFile = File(...)):
 
         for r in results:
             for box in r.boxes:
-                # Confidence check
                 if float(box.conf[0]) < 0.3:
                     continue
 
                 x1, y1, x2, y2 = box.xyxy[0].tolist()
                 box_area = (x2 - x1) * (y2 - y1)
-
-                # Chote/door objects ignore karo — MIN_BOX_AREA se chhote skip
                 if box_area < MIN_BOX_AREA:
                     continue
 
                 label = model.names[int(box.cls[0])]
-
-                # Irrelevant objects ignore karo
                 if label in IGNORE_OBJECTS:
                     continue
-
-                # Direction calculate karo
                 center_x = (x1 + x2) / 2
                 direction = get_direction(center_x, frame_width)
 
                 if label in NAMED_OBJECTS:
-                    # Named object — naam + direction bolega
                     result_objects.append(f"{label} {direction}")
                 else:
-                    # Unknown object — "obstacle" + direction bolega
                     result_objects.append(f"obstacle {direction}")
 
-        # Duplicates hata do (same label + direction)
         unique_objects = list(set(result_objects))
 
         if not unique_objects:
