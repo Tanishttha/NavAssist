@@ -9,12 +9,6 @@ router = APIRouter()
 
 @router.post("/process-command")
 def process_command(data: CommandRequest, request: Request):
-    """
-    🎙️ Voice Command Processing API
-    - Detects intent
-    - Adds logging + validation
-    - Returns structured response
-    """
 
     try:
         if not data or not data.text:
