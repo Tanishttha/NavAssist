@@ -8,15 +8,9 @@ import re
 
 print("🔥 THIS FILE IS RUNNING")
 router = APIRouter()
-
-# 🧠 In-memory step tracker (for demo)
 current_step_index = 0
-
-# 🧹 Clean HTML instructions from Google Maps
 def clean_html(raw_html):
-    # Remove all HTML tags properly
     clean_text = re.sub(r'<[^>]+>', '', raw_html)
-    # Remove extra spaces/newlines
     clean_text = re.sub(r'\s+', ' ', clean_text).strip()
     return clean_text
 
@@ -43,8 +37,6 @@ def get_google_maps_route(destination: str, origin: str):
         data = response.json()
 
         print("🔥 GOOGLE API RESPONSE:", data)
-
-        # ⚠️ Fallback if API fails
         if data.get("status") != "OK":
             logging.error(f"Google API Error: {data}")
             raise Exception(f"Google API failed: {data.get('status')}")
@@ -56,8 +48,6 @@ def get_google_maps_route(destination: str, origin: str):
             raw_instruction = step.get("html_instructions", "")
             instruction = clean_html(raw_instruction)
             distance = step["distance"]["text"]
-
-            # 🧠 Detect direction type
             direction = "forward"
             text_lower = instruction.lower()
 
@@ -99,7 +89,6 @@ def get_route(data: RouteRequest):
     global current_step_index
 
     try:
-        # 🛡️ Validation
         if not data:
             raise HTTPException(status_code=400, detail="Invalid request")
 
@@ -112,35 +101,22 @@ def get_route(data: RouteRequest):
             raise HTTPException(status_code=400, detail="Origin (current location) required")
 
         logging.info(f"Fetching route for: {destination}")
-
-        # 🔥 Get route (Google Maps or fallback)
         route = get_google_maps_route(destination, origin)
 
         steps = route.get("steps", [])
 
         if not steps:
             raise HTTPException(status_code=500, detail="No route steps found")
-
-        # 🧭 Turn-by-turn logic
         if current_step_index >= len(steps):
             current_step_index = 0  # reset
 
         current_step = steps[current_step_index]
-
-        # 📍 FIXED: Do NOT auto-skip steps randomly
-        # Step progression should be controlled by frontend (GPS tracking)
         step_distance = current_step.get("distance_value", 0)
-
-        # Only move step if explicitly triggered (keep stable)
         if step_distance == 0 and current_step_index < len(steps) - 1:
             current_step_index += 1
             current_step = steps[current_step_index]
-
-        # 🔊 English + Hindi voice
         generate_voice_output(f"{current_step['text']}", "navigation")
         generate_voice_output("Kripya diye gaye direction follow karein", "navigation")
-
-        # 🧠 Decision Engine
         navigation_result = process_navigation(route)
 
         return {
