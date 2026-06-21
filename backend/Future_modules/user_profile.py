@@ -9,16 +9,8 @@ router = APIRouter(
     tags=["User Profile"]
 )
 
-# =====================================================
-# In-Memory Stores
-# =====================================================
-
 USERS: Dict[str, dict] = {}
 PROFILE_ANALYTICS: Dict[str, dict] = {}
-
-# =====================================================
-# Models
-# =====================================================
 
 class EmergencyContact(BaseModel):
     name: str
@@ -61,9 +53,6 @@ class ProfileResponse(BaseModel):
     created_at: str
 
 
-# =====================================================
-# Utility Functions
-# =====================================================
 
 def generate_user_id():
     return f"USR-{uuid4().hex[:10].upper()}"
@@ -79,11 +68,6 @@ def initialize_analytics(user_id: str):
         "sos_triggered": 0,
         "last_active": datetime.utcnow().isoformat()
     }
-
-
-# =====================================================
-# Create Profile
-# =====================================================
 
 @router.post("/create")
 def create_profile(payload: UserProfileCreate):
@@ -125,11 +109,6 @@ def create_profile(payload: UserProfileCreate):
         "user_id": user_id
     }
 
-
-# =====================================================
-# Get Profile
-# =====================================================
-
 @router.get("/{user_id}")
 def get_profile(user_id: str):
 
@@ -142,11 +121,6 @@ def get_profile(user_id: str):
     PROFILE_ANALYTICS[user_id]["profile_views"] += 1
 
     return USERS[user_id]
-
-
-# =====================================================
-# Update Profile
-# =====================================================
 
 @router.put("/{user_id}")
 def update_profile(
@@ -182,11 +156,6 @@ def update_profile(
         "profile": profile
     }
 
-
-# =====================================================
-# Delete Profile
-# =====================================================
-
 @router.delete("/{user_id}")
 def delete_profile(user_id: str):
 
@@ -203,11 +172,6 @@ def delete_profile(user_id: str):
         "success": True,
         "message": "Profile deleted"
     }
-
-
-# =====================================================
-# Search Users
-# =====================================================
 
 @router.get("/")
 def search_users(
@@ -229,11 +193,6 @@ def search_users(
         "count": len(results),
         "results": results
     }
-
-
-# =====================================================
-# Emergency Contacts
-# =====================================================
 
 @router.get("/{user_id}/emergency-contacts")
 def get_emergency_contacts(user_id: str):
