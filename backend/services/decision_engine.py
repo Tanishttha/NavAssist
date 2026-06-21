@@ -5,16 +5,12 @@ PRIORITY = {
     "NAVIGATION": 4,
     "INFO": 5
 }
-
-# 🔎 Relevant objects that matter for safety
 DANGER_OBJECTS = {
     "person", "car", "truck", "bus",
     "bicycle", "motorcycle",
     "wall", "tree", "pole"
 }
 STAIRS_OBJECTS = {"stairs", "steps"}
-
-# 🧪 Distance thresholds (meters)
 DANGER_DIST = 2.0
 WARNING_DIST = 4.0
 
@@ -52,8 +48,6 @@ def process_navigation(route_data: dict):
 
 def generate_alert(objects: list, distance: float):
     objects = set(objects or [])
-
-    # 🚨 Immediate danger
     if distance is not None and distance < DANGER_DIST:
         if objects & DANGER_OBJECTS:
             return {
@@ -69,8 +63,6 @@ def generate_alert(objects: list, distance: float):
                 "message": "Stairs ahead. Stop.",
                 "level": "danger"
             }
-
-    # ⚠️ Near warning
     if distance is not None and distance < WARNING_DIST:
         if objects & DANGER_OBJECTS:
             return {
@@ -86,8 +78,6 @@ def generate_alert(objects: list, distance: float):
                 "message": "Stairs nearby. Be careful.",
                 "level": "warning"
             }
-
-    # ✅ Safe
     return {
         "action": "CLEAR",
         "priority": PRIORITY["INFO"],
@@ -99,16 +89,12 @@ def generate_alert(objects: list, distance: float):
 def decide(objects: list, distance: float, route_data: dict):
     alert = generate_alert(objects, distance)
     nav = process_navigation(route_data)
-
-    # Choose higher priority (lower number wins)
     if alert["priority"] <= nav["priority"]:
         return alert
 
     return nav
 
 from time import time
-
-# 🎯 Priority map
 PRIORITY = {
     "EMERGENCY": 1,
     "DANGER": 2,
@@ -116,20 +102,14 @@ PRIORITY = {
     "NAVIGATION": 4,
     "INFO": 5
 }
-
-# 🔎 Relevant objects
 DANGER_OBJECTS = {
     "person", "car", "truck", "bus",
     "bicycle", "motorcycle",
     "wall", "tree", "pole"
 }
 STAIRS_OBJECTS = {"stairs", "steps"}
-
-# 🧪 Distance thresholds (meters)
 DANGER_DIST = 2.0
 WARNING_DIST = 4.0
-
-# 🔁 Cooldown (avoid repeating same alert)
 _last_event = {"key": None, "time": 0}
 COOLDOWN_MS = 2000
 
@@ -182,16 +162,10 @@ def process_navigation(route_data: dict):
 
 def generate_alert(objects: list, distance: float):
     objects = set(objects or [])
-
-    # Normalize distance
     if distance is None:
         distance = 999
-
-    # 🧠 Multi-object priority
     has_danger = bool(objects & DANGER_OBJECTS)
     has_stairs = bool(objects & STAIRS_OBJECTS)
-
-    # 🚨 Immediate danger
     if distance < DANGER_DIST:
         if has_stairs:
             key = "stairs_stop"
@@ -214,8 +188,6 @@ def generate_alert(objects: list, distance: float):
                     "level": "danger",
                     "meta": {"objects": list(objects), "distance": distance}
                 }
-
-    # ⚠️ Near warning
     if distance < WARNING_DIST:
         if has_stairs:
             key = "stairs_warn"
@@ -238,8 +210,6 @@ def generate_alert(objects: list, distance: float):
                     "level": "warning",
                     "meta": {"objects": list(objects), "distance": distance}
                 }
-
-    # ✅ Safe
     return {
         "action": "CLEAR",
         "priority": PRIORITY["INFO"],
@@ -252,8 +222,6 @@ def generate_alert(objects: list, distance: float):
 def decide(objects: list, distance: float, route_data: dict):
     alert = generate_alert(objects, distance)
     nav = process_navigation(route_data)
-
-    # Choose higher priority (lower number wins)
     if alert["priority"] <= nav["priority"]:
         return alert
 
