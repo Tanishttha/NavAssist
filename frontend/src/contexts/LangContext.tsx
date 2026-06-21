@@ -49,7 +49,6 @@ const translations = {
     meters: "meters",
     locationFail: "Unable to fetch location",
     currentStep: "Current step",
-    // Mock steps
     step1: "Walk straight",
     step1d: "20m",
     step2: "Turn left at the crossing",
@@ -60,7 +59,6 @@ const translations = {
     step4d: "15m",
     step5: "You have arrived",
     step5d: "0m",
-    // Mock detections
     det1: "Person ahead",
     det2: "Obstacle on left",
     det3: "Stairs ahead",
